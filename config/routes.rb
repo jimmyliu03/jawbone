@@ -1,5 +1,9 @@
 Jawbone::Application.routes.draw do
 
+  get "static_pages/connect"
+match 'connect', to: 'static_pages#connect', via: 'get'
+
+
 
 
   # The priority is based upon order of creation: first created -> highest priority.
