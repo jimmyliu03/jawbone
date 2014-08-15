@@ -11,10 +11,12 @@ class SessionsController < ApplicationController
   	 token = current_user.token
   	 @auth = "Bearer " + token
 
-  	 @result = HTTParty.get('http://jawbone.com/nudge/api/v.1.1/users/@me',
+	@result = HTTParty.get('http://jawbone.com/nudge/api/v.1.1/users/@me/goals',
                            :headers => { "Authorization" => @auth, "Accept" => "application/json"}
                           )
-
+  	 @result2 = HTTParty.get('http://jawbone.com/nudge/api/v.1.1/users/@me/moves',
+                           :headers => { "Authorization" => @auth, "Accept" => "application/json"}
+                          )
 
   end
 
@@ -27,7 +29,8 @@ class SessionsController < ApplicationController
 	  if @authorization
 	  	@current_user = User.first
     @inspections = @current_user.authorizations.inspect
-    render :text => "Welcome back #{@authorization.user.name}! You have already signed up. #{@token}"
+    #render :text => "Welcome back #{@authorization.user.name}! You have already signed up. #{@token}"
+    redirect_to '/login'
     @current_user.token = @token
 
 
@@ -36,8 +39,8 @@ class SessionsController < ApplicationController
     user = User.new :name=>"Jimmy", :email => "Jimmy@email.com", :token => auth_hash["credentials"]["token"]
     user.authorizations.build :provider => auth_hash["provider"], :uid => auth_hash["uid"]
     user.save
- 
-    render :text => "Hi #{user.name}! You've signed up.  #{@hashcontents}" 
+ 	redirect_to '/login'
+    #render :text => "Hi #{user.name}! You've signed up."
 
 
   end
@@ -48,4 +51,11 @@ class SessionsController < ApplicationController
 
   def failure
   end
+
+  def destroy
+  	
+  		User.first.destroy unless User.first.nil?
+  Authorization.first.destroy unless Authorization.first.nil?
+  render :text => "You've logged out!"
+end
 end
