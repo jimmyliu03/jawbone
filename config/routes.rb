@@ -1,6 +1,5 @@
 Jawbone::Application.routes.draw do
 
-  get "static_pages/connect"
 match 'connect', to: 'static_pages#connect', via: 'get'
 
 
