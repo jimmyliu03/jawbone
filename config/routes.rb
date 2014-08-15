@@ -1,7 +1,9 @@
 Jawbone::Application.routes.draw do
 
-match 'connect', to: 'static_pages#connect', via: 'get'
 
+get   '/login', :to => 'sessions#new', :as => :login
+match '/auth/:provider/callback', :to => 'sessions#create', via: [:get, :post]
+match '/auth/failure', :to => 'sessions#failure', via: [:get, :post]
 
 
 
